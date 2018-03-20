@@ -39,9 +39,27 @@ class App extends Component {
       });
   }
 
-  deletePost() {}
+  deletePost(id) {
+    console.log(id);
+    axios
+      .delete(`https://practiceapi.devmountain.com/api/posts?id=${id}`)
+      .then(res => {
+        this.setState({
+          posts: res.data
+        });
+      });
+    console.log("fired");
+  }
 
-  createPost() {}
+  createPost(text) {
+    axios
+      .post(`https://practiceapi.devmountain.com/api/posts?`, { text })
+      .then(res => {
+        this.setState({
+          posts: res.data
+        });
+      });
+  }
 
   render() {
     const { posts } = this.state;
@@ -49,10 +67,11 @@ class App extends Component {
       return (
         <Post
           key={i}
-          text={e.text}
+          text={JSON.stringify(e.text)}
           date={e.date}
           id={e.id}
           updatePostFn={this.updatePost}
+          deletePostFn={this.deletePost}
         />
       );
     });
@@ -62,10 +81,9 @@ class App extends Component {
         <Header />
 
         <section className="App__content">
-          <Compose />
+          <Compose createPostFn={this.createPost} />
           {postList}
         </section>
-        {postList}
       </div>
     );
   }
